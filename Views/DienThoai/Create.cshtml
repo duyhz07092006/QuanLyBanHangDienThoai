@@ -1,0 +1,121 @@
+
+@model QuanLyBanHangDienThoai.Models.DienThoai
+
+@{
+    ViewData["Title"] = "Thêm điện thoại";
+    var danhMuc = ViewBag.DanhMuc
+        as List<QuanLyBanHangDienThoai.Models.DanhMuc>
+        ?? new List<QuanLyBanHangDienThoai.Models.DanhMuc>();
+}
+
+<h2>Thêm điện thoại</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly"
+         class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="TenDT" class="form-label">
+            Tên điện thoại
+        </label>
+        <input asp-for="TenDT" class="form-control" />
+        <span asp-validation-for="TenDT"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaDM" class="form-label">
+            Danh mục
+        </label>
+        <select asp-for="MaDM" class="form-select">
+            <option value="0">-- Chọn hãng --</option>
+            @foreach (var dm in danhMuc)
+            {
+                <option value="@dm.MaDM">@dm.TenDM</option>
+            }
+        </select>
+        <span asp-validation-for="MaDM"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gia" class="form-label">
+            Giá bán
+        </label>
+        <input asp-for="Gia" type="number"
+               min="0" step="1" class="form-control" />
+        <span asp-validation-for="Gia"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoLuongTon" class="form-label">
+            Số lượng tồn
+        </label>
+        <input asp-for="SoLuongTon" type="number"
+               min="0" class="form-control" />
+        <span asp-validation-for="SoLuongTon"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HinhAnh" class="form-label">
+            Đường dẫn hình ảnh
+        </label>
+        <input asp-for="HinhAnh" class="form-control" />
+        <span asp-validation-for="HinhAnh" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ManHinh" class="form-label">
+            Màn hình
+        </label>
+        <input asp-for="ManHinh" class="form-control" />
+        <span asp-validation-for="ManHinh" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RAM" class="form-label">RAM</label>
+        <input asp-for="RAM" class="form-control" />
+        <span asp-validation-for="RAM" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BoNho" class="form-label">
+            Bộ nhớ
+        </label>
+        <input asp-for="BoNho" class="form-control" />
+        <span asp-validation-for="BoNho" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Pin" class="form-label">Pin</label>
+        <input asp-for="Pin" class="form-control" />
+        <span asp-validation-for="Pin" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MoTa" class="form-label">Mô tả</label>
+        <textarea asp-for="MoTa"
+                  class="form-control"></textarea>
+        <span asp-validation-for="MoTa" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="TrangThai" class="form-check-input" />
+        <label asp-for="TrangThai" class="form-check-label">Đang bán</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Lưu điện thoại
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

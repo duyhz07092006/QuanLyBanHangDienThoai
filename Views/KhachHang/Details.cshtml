@@ -1,0 +1,23 @@
+@model KhachHang
+@{
+    ViewData["Title"] = "Chi tiết khách hàng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Chi tiết khách hàng</h3>
+        <p class="text-muted mb-0">Thông tin hồ sơ khách hàng</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+<div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3 py-2">Mã khách hàng</dt><dd class="col-sm-9 py-2">@($"#KH0{Model.MaKH}")</dd>
+            <dt class="col-sm-3 py-2">Họ và tên</dt><dd class="col-sm-9 py-2">@Model.HoTen</dd>
+            <dt class="col-sm-3 py-2">Số điện thoại</dt><dd class="col-sm-9 py-2">@Model.SoDienThoai</dd>
+            <dt class="col-sm-3 py-2">Email</dt><dd class="col-sm-9 py-2">@(Model.Email ?? "Chưa cập nhật")</dd>
+            <dt class="col-sm-3 py-2">Địa chỉ</dt><dd class="col-sm-9 py-2">@Model.DiaChi</dd>
+        </dl>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+@model IEnumerable<QuanLyBanHangDienThoai.Models.DonHang>
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Đơn hàng của tôi</h2>
+
+    @if (TempData["ThongBao"] is string thongBaoOk)
+    {
+        <div class="alert alert-success">@thongBaoOk</div>
+    }
+    @if (TempData["Loi"] is string thongBaoLoi)
+    {
+        <div class="alert alert-danger">@thongBaoLoi</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Người nhận</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@($"#DH0{item.MaDH}")</td>
+                            <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.TenNguoiNhan</td>
+                            <td class="fw-semibold">@item.TongTien.ToString("N0") ₫</td>
+                            <td>
+                                <span class="badge @(item.TrangThai == "Hoàn thành" ? "bg-success" : item.TrangThai == "Đang giao" ? "bg-warning text-dark" : item.TrangThai == "Đã hủy" ? "bg-danger" : "bg-info text-dark")">@item.TrangThai</span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@item.MaDH" class="btn btn-sm btn-primary">Chi tiết</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Bạn chưa có đơn hàng nào. <a asp-controller="CuaHang" asp-action="Index">Mua sắm ngay</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

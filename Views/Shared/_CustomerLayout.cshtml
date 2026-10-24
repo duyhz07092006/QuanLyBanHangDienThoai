@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PHONE STORE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --store-ink: #172033;
+            --store-muted: #687386;
+            --store-accent: #e65c35;
+            --store-surface: #f6f7f9;
+        }
+
+        body {
+            color: var(--store-ink);
+            background: #fff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .store-topbar {
+            background: var(--store-ink);
+            color: #d8deea;
+            font-size: .82rem;
+        }
+
+        .store-brand {
+            color: var(--store-ink);
+            letter-spacing: -.04em;
+        }
+
+        .store-brand:hover {
+            color: var(--store-accent);
+        }
+
+        .store-brand-mark {
+            width: 42px;
+            height: 42px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 14px;
+            color: #fff;
+            background: var(--store-accent);
+        }
+
+        .store-search .form-control,
+        .store-search .input-group-text {
+            background: var(--store-surface);
+            border-color: var(--store-surface);
+        }
+
+        .store-search .form-control:focus {
+            box-shadow: 0 0 0 .2rem rgb(230 92 53 / 14%);
+            border-color: #f2b5a4;
+        }
+
+        .store-nav {
+            border-top: 1px solid #eef0f3;
+        }
+
+        .store-nav a {
+            color: #4d586b;
+            font-size: .92rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .store-nav a:hover {
+            color: var(--store-accent);
+        }
+
+        .store-main {
+            min-height: 70vh;
+        }
+
+        .store-footer {
+            background: #f6f7f9;
+        }
+
+        .btn-store {
+            color: #fff;
+            background: var(--store-accent);
+            border-color: var(--store-accent);
+        }
+
+        .btn-store:hover {
+            color: #fff;
+            background: #cd4827;
+            border-color: #cd4827;
+        }
+
+        @@media (max-width: 575.98px) {
+            .store-search {
+                width: 100%;
+                order: 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="store-topbar py-2">
+        <div class="container d-flex justify-content-between">
+            <span><i class="fa-solid fa-truck-fast me-2"></i>Giao hàng toàn quốc · Hỗ trợ đổi trả</span>
+            <span class="d-none d-sm-inline"><i class="fa-solid fa-headset me-2"></i>Tư vấn mỗi ngày</span>
+        </div>
+    </div>
+
+    <header class="bg-white sticky-top shadow-sm">
+        <div class="container py-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <a asp-controller="CuaHang" asp-action="Index" class="store-brand d-flex align-items-center gap-2 text-decoration-none fw-bold fs-4">
+                    <span class="store-brand-mark"><i class="fa-solid fa-mobile-screen-button"></i></span>
+                    <span>PHONE<span class="text-danger">STORE</span></span>
+                </a>
+                <form class="store-search input-group flex-grow-1 mx-lg-4" role="search" onsubmit="return false;">
+                    <span class="input-group-text border-end-0"><i class="fa-solid fa-magnifying-glass text-secondary"></i></span>
+                    <input id="productSearch" class="form-control border-start-0 ps-0" type="search" placeholder="Bạn đang tìm điện thoại nào?" aria-label="Tìm điện thoại" />
+                </form>
+                <div class="ms-auto d-flex align-items-center gap-2">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        @if (User.IsInRole("Admin") || User.IsInRole("NhanVien"))
+                        {
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark btn-sm">
+                                <i class="fa-solid fa-gauge-high me-1"></i><span class="d-none d-sm-inline">Quản trị</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="DienThoai" asp-action="Index" class="btn btn-outline-dark btn-sm">
+                                <i class="fa-solid fa-mobile-screen-button me-1"></i><span class="d-none d-sm-inline">Điện thoại</span>
+                            </a>
+                            <a asp-controller="DonCuaToi" asp-action="Index" class="btn btn-outline-dark btn-sm">
+                                <i class="fa-solid fa-receipt me-1"></i><span class="d-none d-sm-inline">Đơn của tôi</span>
+                            </a>
+                            <a asp-controller="GioHang" asp-action="Index" class="btn btn-store btn-sm">
+                                <i class="fa-solid fa-cart-shopping me-1"></i><span class="d-none d-sm-inline">Giỏ hàng</span>
+                            </a>
+                        }
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-link btn-sm text-secondary text-decoration-none">
+                                Đăng xuất (@User.Identity.Name)
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-store btn-sm">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i><span class="d-none d-sm-inline">Đăng nhập</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <nav class="store-nav">
+            <div class="container d-flex align-items-center gap-4 py-3 overflow-auto">
+                <a asp-controller="CuaHang" asp-action="Index">Trang chủ</a>
+                <a href="#san-pham">Điện thoại</a>
+                <a href="#uu-dai">Ưu đãi</a>
+                <a href="#footer">Liên hệ</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="store-main">
+        @RenderBody()
+    </main>
+
+    <footer class="store-footer mt-5 py-4" id="footer">
+        <div class="container d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div>
+                <div class="fw-bold mb-1">PHONE STORE</div>
+                <div class="text-secondary small">Điện thoại chính hãng, lựa chọn an tâm.</div>
+            </div>
+            <div class="text-secondary small">
+                <i class="fa-solid fa-shield-halved me-2 text-success"></i>Sản phẩm được cập nhật trực tiếp từ cửa hàng
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,120 @@
+﻿@model QuanLyBanHangDienThoai.Models.LapDonViewModel
+
+@{
+    ViewData["Title"] = "Lập đơn tại quầy";
+}
+
+<h2 class="mb-4">Lập đơn tại quầy</h2>
+
+@if (TempData["ThongBao"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ThongBao"]
+    </div>
+}
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Index" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Thông tin khách hàng</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="HoTen" class="form-label">Họ tên khách hàng</label>
+                    <input asp-for="HoTen" class="form-control" />
+                    <span asp-validation-for="HoTen" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="SoDienThoai" class="form-label">Số điện thoại</label>
+                    <input asp-for="SoDienThoai" class="form-control" />
+                    <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
+                    <input asp-for="DiaChi" class="form-control" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="MaNV" class="form-label">Nhân viên lập đơn</label>
+                    <select asp-for="MaNV" class="form-select"
+                            asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(
+                                                        ViewBag.NhanVien, "MaNV", "HoTen"))">
+                        <option value="0">-- Chọn nhân viên --</option>
+                    </select>
+                    <span asp-validation-for="MaNV" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PhuongThucTT" class="form-label">
+                        Phương thức thanh toán
+                    </label>
+                    <select asp-for="PhuongThucTT" class="form-select">
+                        <option value="Tiền mặt">Tiền mặt</option>
+                        <option value="Chuyển khoản">Chuyển khoản</option>
+                        <option value="COD">COD</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Chọn điện thoại</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Mã</th>
+                            <th>Tên điện thoại</th>
+                            <th>Đơn giá</th>
+                            <th>Tồn kho</th>
+                            <th style="width:130px">Số lượng mua</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.SanPham.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.SanPham[i].MaDT
+                                    <input type="hidden" asp-for="SanPham[i].MaDT" />
+                                </td>
+                                <td>
+                                    @Model.SanPham[i].TenDT
+                                    <input type="hidden" asp-for="SanPham[i].TenDT" />
+                                </td>
+                                <td>
+                                    @Model.SanPham[i].DonGia.ToString("N0") đ
+                                    <input type="hidden" asp-for="SanPham[i].DonGia" />
+                                </td>
+                                <td>
+                                    @Model.SanPham[i].SoLuongTon
+                                    <input type="hidden" asp-for="SanPham[i].SoLuongTon" />
+                                </td>
+                                <td>
+                                    <input asp-for="SanPham[i].SoLuong"
+                                           class="form-control" min="0" max="1000" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted">
+                Nhập số lượng lớn hơn 0 cho điện thoại muốn mua; để 0 nếu không chọn.
+            </p>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-cart-check"></i> Tạo đơn hàng
+    </button>
+    <a asp-controller="Home" asp-action="Index"
+       class="btn btn-secondary">Quay lại</a>
+</form>

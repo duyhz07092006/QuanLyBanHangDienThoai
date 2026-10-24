@@ -1,0 +1,109 @@
+﻿ @model QuanLyBanHangDienThoai.Models.DienThoai
+
+@{
+    ViewData["Title"] = "Chi tiết điện thoại";
+    bool coQuyenQuanLy = User.IsInRole("Admin") || User.IsInRole("NhanVien");
+}
+
+<div class="container mt-4 mb-5">
+    <a asp-controller="DienThoai"
+       asp-action="Index"
+       class="btn btn-outline-secondary mb-3">
+        ← Quay lại danh sách
+    </a>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">@Model.TenDT</h4>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-5 text-center">
+                    @if (!string.IsNullOrWhiteSpace(Model.HinhAnh))
+                    {
+                        <img src="@Url.Content(QuanLyBanHangDienThoai.Services.AnhSanPham.DuongDan(Model.HinhAnh)!)"
+                             alt="@Model.TenDT"
+                             class="img-fluid rounded"
+                             style="max-height:350px; object-fit:contain;" />
+                    }
+                    else
+                    {
+                        <div class="border rounded p-5 text-muted">
+                            Chưa có hình ảnh sản phẩm
+                        </div>
+                    }
+                </div>
+
+                <div class="col-md-7">
+                    <h3 class="text-primary mb-3">
+                        @Model.Gia.ToString("N0") VNĐ
+                    </h3>
+
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width:40%">Mã điện thoại</th>
+                                <td>@Model.MaDT</td>
+                            </tr>
+                            <tr>
+                                <th>Tên điện thoại</th>
+                                <td>@Model.TenDT</td>
+                            </tr>
+                            <tr>
+                                <th>Danh mục</th>
+                                <td>@(Model.DanhMuc?.TenDM ?? "Chưa phân loại")</td>
+                            </tr>
+                            <tr>
+                                <th>Số lượng tồn</th>
+                                <td>@Model.SoLuongTon</td>
+                            </tr>
+                            <tr>
+                                <th>Màn hình</th>
+                                <td>@(Model.ManHinh ?? "Chưa cập nhật")</td>
+                            </tr>
+                            <tr>
+                                <th>RAM</th>
+                                <td>@(Model.RAM ?? "Chưa cập nhật")</td>
+                            </tr>
+                            <tr>
+                                <th>Bộ nhớ</th>
+                                <td>@(Model.BoNho ?? "Chưa cập nhật")</td>
+                            </tr>
+                            <tr>
+                                <th>Pin</th>
+                                <td>@(Model.Pin ?? "Chưa cập nhật")</td>
+                            </tr>
+                            <tr>
+                                <th>Trạng thái</th>
+                                <td>
+                                    @if (Model.TrangThai && Model.SoLuongTon > 0)
+                                    {
+                                        <span class="badge bg-success">Đang kinh doanh</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Ngừng bán / Hết hàng</span>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h5>Mô tả sản phẩm</h5>
+                    <p>@(string.IsNullOrWhiteSpace(Model.MoTa) ? "Chưa có mô tả sản phẩm." : Model.MoTa)</p>
+
+                    @if (coQuyenQuanLy)
+                    {
+                        <a asp-controller="DienThoai"
+                           asp-action="Edit"
+                           asp-route-id="@Model.MaDT"
+                           class="btn btn-warning">
+                            Sửa thông tin
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

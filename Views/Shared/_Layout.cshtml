@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản lý bán điện thoại</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/QuanLyBanHangDienThoai.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    PHONE STORE
+                </a>
+
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="CuaHang" asp-action="Index">
+                                Cửa hàng
+                            </a>
+                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole("Admin") || User.IsInRole("NhanVien"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                        Tổng quan
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="KhachHang" asp-action="Index">
+                                        Khách hàng
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="DonHang" asp-action="Index">
+                                        Quản lý đơn hàng
+                                    </a>
+                                </li>
+
+                                @* Lập đơn tại quầy *@
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="LapDon" asp-action="Index">
+                                        <i class="fa-solid fa-cash-register"></i>
+                                        Lập đơn tại quầy
+                                    </a>
+                                </li>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="DanhMuc" asp-action="Index">
+                                            Hãng điện thoại
+                                        </a>
+                                    </li>
+
+                                    @* Chỉ thêm mục này khi đã có NhanVienController *@
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="NhanVien" asp-action="Index">
+                                            <i class="fa-solid fa-users-gear"></i>
+                                            Quản lý nhân viên
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="DienThoai" asp-action="Index">
+                                    Điện thoại
+                                </a>
+                            </li>
+
+                            @if (User.IsInRole("KhachHang"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="GioHang" asp-action="Index">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        Giỏ hàng
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="DonCuaToi" asp-action="Index">
+                                        Đơn hàng của tôi
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Xin chào, @User.Identity.Name
+                                    (@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value)
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout"
+                                      method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="nav-link btn btn-link">
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    Đăng nhập
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid p-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - Quản lý bán điện thoại
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

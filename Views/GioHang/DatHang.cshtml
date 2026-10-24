@@ -1,0 +1,71 @@
+﻿
+@model QuanLyBanHangDienThoai.ViewModels.DatHangViewModel
+
+@{
+    ViewData["Title"] = "Đặt hàng";
+}
+
+<h2>THÔNG TIN ĐẶT HÀNG</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-controller="GioHang"
+      asp-action="XacNhanDatHang"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="TenNguoiNhan" class="form-label"></label>
+        <input asp-for="TenNguoiNhan" class="form-control" />
+        <span asp-validation-for="TenNguoiNhan"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SdtNguoiNhan" class="form-label"></label>
+        <input asp-for="SdtNguoiNhan" class="form-control" />
+        <span asp-validation-for="SdtNguoiNhan"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DiaChiGiao" class="form-label"></label>
+        <textarea asp-for="DiaChiGiao"
+                  class="form-control"></textarea>
+        <span asp-validation-for="DiaChiGiao"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PhuongThucTT" class="form-label"></label>
+        <select asp-for="PhuongThucTT" class="form-select">
+            <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+            <option value="Chuyển khoản">Chuyển khoản</option>
+        </select>
+        <span asp-validation-for="PhuongThucTT"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GhiChu" class="form-label"></label>
+        <textarea asp-for="GhiChu"
+                  class="form-control"></textarea>
+        <span asp-validation-for="GhiChu"
+              class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Xác nhận đặt hàng
+    </button>
+
+    <a asp-controller="GioHang"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại giỏ hàng
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,68 @@
+@model IEnumerable<QuanLyBanHangDienThoai.Models.KhachHang>
+@{
+    ViewData["Title"] = "Quản lý Khách hàng";
+}
+
+<div class="card border-0 shadow-sm rounded-3">
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="alert alert-success m-3 mb-0">@successMessage</div>
+    }
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="alert alert-warning m-3 mb-0">@errorMessage</div>
+    }
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0"><i class="fa-solid fa-users text-primary me-2"></i> Danh sách Khách hàng</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Mã KH</th>
+                        <th>Họ và Tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold">@($"#KH0{item.MaKH}")</td>
+                                <td><span class="fw-semibold">@item.HoTen</span></td>
+                                <td>@item.SoDienThoai</td>
+                                <td>@(item.Email ?? "Chưa cập nhật")</td>
+                                <td>@item.DiaChi</td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@item.MaKH" class="btn btn-sm btn-outline-info me-1">
+                                        <i class="fa-solid fa-eye"></i> Xem
+                                    </a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.MaKH" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách hàng này?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fa-solid fa-trash"></i> Xóa
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">Chưa có dữ liệu khách hàng</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+@model IEnumerable<QuanLyBanHangDienThoai.Models.DanhMuc>
+@{
+    ViewData["Title"] = "Hãng điện thoại";
+    var soDienThoai = ViewBag.SoDienThoai as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+
+<div class="card border-0 shadow-sm rounded-3">
+    @if (TempData["SuccessMessage"] is string thongBaoOk)
+    {
+        <div class="alert alert-success m-3 mb-0">@thongBaoOk</div>
+    }
+    @if (TempData["ErrorMessage"] is string thongBaoLoi)
+    {
+        <div class="alert alert-warning m-3 mb-0">@thongBaoLoi</div>
+    }
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0"><i class="fa-solid fa-tags text-primary me-2"></i> Hãng điện thoại</h5>
+        <a asp-action="Create" class="btn btn-success btn-sm"><i class="fa-solid fa-plus me-1"></i> Thêm hãng</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Mã</th>
+                        <th>Tên hãng</th>
+                        <th>Mô tả</th>
+                        <th class="text-center">Số điện thoại</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold">@item.MaDM</td>
+                                <td class="fw-semibold">@item.TenDM</td>
+                                <td>@item.MoTa</td>
+                                <td class="text-center">@(soDienThoai.TryGetValue(item.MaDM, out var n) ? n : 0)</td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.MaDM" class="btn btn-sm btn-outline-warning me-1">
+                                        <i class="fa-solid fa-pen"></i> Sửa
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.MaDM" method="post" class="d-inline"
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa hãng này?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="5" class="text-center text-muted py-4">Chưa có hãng nào</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

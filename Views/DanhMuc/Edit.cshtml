@@ -1,0 +1,32 @@
+@model QuanLyBanHangDienThoai.Models.DanhMuc
+@{
+    ViewData["Title"] = "Sửa hãng điện thoại";
+}
+
+<div class="container mt-4" style="max-width: 640px;">
+    <h2>Sửa hãng điện thoại</h2>
+
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <input type="hidden" asp-for="MaDM" />
+
+        <div class="mb-3">
+            <label asp-for="TenDM" class="form-label">Tên hãng</label>
+            <input asp-for="TenDM" class="form-control" maxlength="100" />
+            <span asp-validation-for="TenDM" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MoTa" class="form-label">Mô tả</label>
+            <textarea asp-for="MoTa" class="form-control" rows="3" maxlength="500"></textarea>
+            <span asp-validation-for="MoTa" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

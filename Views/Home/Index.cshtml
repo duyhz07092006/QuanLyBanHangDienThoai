@@ -1,0 +1,131 @@
+
+@model QuanLyBanHangDienThoai.Models.DashboardData
+
+@{
+    ViewData["Title"] = "Trang Chủ Quản Trị";
+}
+
+@if (User.IsInRole("Admin") || User.IsInRole("NhanVien"))
+{
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Tổng quan hệ thống</h3>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <!-- Tổng số điện thoại -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle me-3">
+                        <i class="fa-solid fa-mobile-screen fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Điện thoại</div>
+                        <h4 class="fw-bold mb-0">@Model.SoDienThoai</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tổng số khách hàng -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle me-3">
+                        <i class="fa-solid fa-users fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Khách hàng</div>
+                        <h4 class="fw-bold mb-0">@Model.SoKhachHang</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đơn hàng mới -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-circle me-3">
+                        <i class="fa-solid fa-receipt fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Đơn hàng mới</div>
+                        <h4 class="fw-bold mb-0">@Model.SoDonHangMoi</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doanh thu -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-circle me-3">
+                        <i class="fa-solid fa-coins fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Doanh thu</div>
+                        <h4 class="fw-bold mb-0">
+                            @((Model.DoanhThu / 1_000_000).ToString("N0"))M
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Đơn hàng gần đây -->
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0">Đơn hàng gần đây</h5>
+            <a asp-controller="DonHang"
+               asp-action="Index"
+               class="btn btn-sm btn-outline-primary">
+                Xem tất cả
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Mã đơn</th>
+                        <th>Người nhận</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.DonHangMoi)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold">@($"#DH0{item.MaDH}")</td>
+                            <td>@item.TenNguoiNhan</td>
+                            <td>@item.NgayDat.ToString("dd/MM/yyyy")</td>
+                            <td class="fw-semibold">@item.TongTien.ToString("N0") ₫</td>
+                            <td>
+                                <span class="badge @(item.TrangThai == "Hoàn thành" ? "bg-success" : item.TrangThai == "Đang giao" ? "bg-warning text-dark" : item.TrangThai == "Đã hủy" ? "bg-danger" : "bg-info text-dark")">
+                                    @item.TrangThai
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-4">
+        <h3>Chào mừng bạn đến với PHONE STORE!</h3>
+        <p>Hãy xem danh sách điện thoại và lựa chọn sản phẩm yêu thích.</p>
+        <a asp-controller="DienThoai"
+           asp-action="Index"
+           class="btn btn-primary">
+            Xem điện thoại
+        </a>
+    </div>
+}

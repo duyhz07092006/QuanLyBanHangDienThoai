@@ -1,0 +1,53 @@
+﻿
+@model IEnumerable<QuanLyBanHangDienThoai.Models.NhanVien>
+
+@{
+    ViewData["Title"] = "Quản lý nhân viên";
+}
+
+<h2>QUẢN LÝ NHÂN VIÊN</h2>
+@if (TempData["Loi"] != null)
+{
+    <div class="alert alert-danger">@TempData["Loi"]</div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Thêm nhân viên
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã NV</th>
+            <th>Họ tên</th>
+            <th>Giới tính</th>
+            <th>Ngày sinh</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Địa chỉ</th>
+            <th>Chức vụ</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var nv in Model)
+    {
+        <tr>
+            <td>@nv.MaNV</td>
+            <td>@nv.HoTen</td>
+            <td>@nv.GioiTinh</td>
+            <td>@nv.NgaySinh?.ToString("dd/MM/yyyy")</td>
+            <td>@nv.SoDienThoai</td>
+            <td>@nv.Email</td>
+            <td>@nv.DiaChi</td>
+            <td>@nv.ChucVu</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@nv.MaNV" class="btn btn-sm btn-warning">Sửa</a>
+                <a asp-action="Delete" asp-route-id="@nv.MaNV" class="btn btn-sm btn-danger">Xóa</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,40 @@
+﻿
+@model QuanLyBanHangDienThoai.Models.DienThoai
+
+@{
+    ViewData["Title"] = "Xóa điện thoại";
+}
+
+<div class="container mt-4">
+    <h2 class="text-danger">Xóa điện thoại</h2>
+
+    <div class="alert alert-warning">
+        M có chắc chắn muốn xóa điện thoại này không?
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Mã điện thoại</dt>
+        <dd class="col-sm-9">@Model.MaDT</dd>
+
+        <dt class="col-sm-3">Tên điện thoại</dt>
+        <dd class="col-sm-9">@Model.TenDT</dd>
+
+        <dt class="col-sm-3">Danh mục</dt>
+        <dd class="col-sm-9">@Model.DanhMuc?.TenDM</dd>
+
+        <dt class="col-sm-3">Giá</dt>
+        <dd class="col-sm-9">@Model.Gia.ToString("N0") đ</dd>
+    </dl>
+
+    <form asp-action="Delete" asp-route-id="@Model.MaDT" method="post">
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="btn btn-danger">
+            Xác nhận xóa
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Hủy
+        </a>
+    </form>
+</div>

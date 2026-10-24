@@ -1,0 +1,224 @@
+@model QuanLyBanHangDienThoai.ViewModels.DienThoaiIndexViewModel
+
+@{
+    ViewData["Title"] = "Danh sách điện thoại";
+    bool coQuyenQuanLy = User.IsInRole("Admin") || User.IsInRole("NhanVien");
+
+    var loc = Model.Loc;
+    var kq = Model.KetQua;
+
+    // Tạo link sang trang p nhưng giữ nguyên từ khóa / hãng / giá / sắp xếp đang lọc
+    Func<int, string?> linkTrang = p => Url.Action("Index", "DienThoai", new
+    {
+        tuKhoa = loc.TuKhoa,
+        maDM = loc.MaDM,
+        giaTu = loc.GiaTu,
+        giaDen = loc.GiaDen,
+        sapXep = loc.SapXep,
+        trang = p
+    });
+
+    bool dangLoc = !string.IsNullOrWhiteSpace(loc.TuKhoa) || loc.MaDM.HasValue
+                   || loc.GiaTu.HasValue || loc.GiaDen.HasValue
+                   || !string.IsNullOrWhiteSpace(loc.SapXep);
+}
+
+<div class="container mt-4">
+    <h2>Danh sách điện thoại</h2>
+
+    @if (TempData["ThongBao"] is string thongBaoTB)
+    {
+        <div class="alert alert-success">@thongBaoTB</div>
+    }
+    @if (TempData["Loi"] is string thongBaoLoi)
+    {
+        <div class="alert alert-danger">@thongBaoLoi</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.CanhBao))
+    {
+        <div class="alert alert-warning">@Model.CanhBao</div>
+    }
+
+    @if (coQuyenQuanLy)
+    {
+        <a asp-controller="DienThoai" asp-action="Create" class="btn btn-success mb-3">
+            + Thêm điện thoại
+        </a>
+    }
+
+    <form asp-controller="DienThoai" asp-action="Index" method="get" class="row g-2 mb-3">
+        <div class="col-lg-3 col-md-6">
+            <input type="text" name="tuKhoa" value="@loc.TuKhoa" class="form-control"
+                   placeholder="Tên điện thoại hoặc hãng..." />
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+            <select name="maDM" class="form-select">
+                <option value="">Tất cả hãng</option>
+                @foreach (var dm in Model.DanhMuc)
+                {
+                    <option value="@dm.MaDM" selected="@(loc.MaDM == dm.MaDM)">@dm.TenDM</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-6">
+            <input type="number" name="giaTu" value="@loc.GiaTu" min="0" step="1000"
+                   class="form-control" placeholder="Giá từ (đ)" />
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-6">
+            <input type="number" name="giaDen" value="@loc.GiaDen" min="0" step="1000"
+                   class="form-control" placeholder="Giá đến (đ)" />
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+            <select name="sapXep" class="form-select">
+                <option value="" selected="@(string.IsNullOrEmpty(loc.SapXep))">Sắp xếp: Mặc định</option>
+                <option value="gia_tang" selected="@(loc.SapXep == "gia_tang")">Giá tăng dần</option>
+                <option value="gia_giam" selected="@(loc.SapXep == "gia_giam")">Giá giảm dần</option>
+                <option value="ten" selected="@(loc.SapXep == "ten")">Tên A → Z</option>
+                <option value="moi" selected="@(loc.SapXep == "moi")">Mới nhất</option>
+            </select>
+        </div>
+
+        <div class="col-lg-1 col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Lọc</button>
+            @if (dangLoc)
+            {
+                <a asp-controller="DienThoai" asp-action="Index" class="btn btn-outline-secondary">Xóa lọc</a>
+            }
+        </div>
+    </form>
+
+    <p class="text-muted">
+        @if (kq.TongSoDong == 0)
+        {
+            <span>Không có kết quả.</span>
+        }
+        else
+        {
+            <span>Hiển thị @(kq.TuDong)–@(kq.DenDong) trong tổng số @(kq.TongSoDong) điện thoại.</span>
+        }
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mã</th>
+                    <th>Tên điện thoại</th>
+                    <th>Hãng</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var dt in kq.DuLieu)
+                {
+                    <tr>
+                        <td>@dt.MaDT</td>
+                        <td>@dt.TenDT</td>
+                        <td>@dt.DanhMuc?.TenDM</td>
+                        <td>@dt.Gia.ToString("N0") đ</td>
+                        <td>@dt.SoLuongTon</td>
+                        <td>
+                            @if (dt.TrangThai && dt.SoLuongTon > 0)
+                            {
+                                <span class="badge bg-success">Đang bán</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Ngừng bán / Hết hàng</span>
+                            }
+                        </td>
+
+                        <td>
+                            <a asp-controller="DienThoai" asp-action="Details" asp-route-id="@dt.MaDT"
+                               class="btn btn-info btn-sm mb-1">Chi tiết</a>
+
+                            @if (User.IsInRole("KhachHang") && dt.TrangThai && dt.SoLuongTon > 0)
+                            {
+                                <form asp-controller="GioHang" asp-action="Them" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@dt.MaDT" />
+                                    <input type="hidden" name="soLuong" value="1" />
+                                    <button type="submit" class="btn btn-success btn-sm mb-1">
+                                        Thêm vào giỏ hàng
+                                    </button>
+                                </form>
+                            }
+
+                            @if (coQuyenQuanLy)
+                            {
+                                <a asp-controller="DienThoai" asp-action="Edit" asp-route-id="@dt.MaDT"
+                                   class="btn btn-warning btn-sm mb-1">Sửa</a>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="DienThoai" asp-action="Delete" asp-route-id="@dt.MaDT"
+                                       class="btn btn-danger btn-sm mb-1">Xóa</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+
+                @if (!kq.DuLieu.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">Không tìm thấy điện thoại.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (kq.TongSoTrang > 1)
+    {
+        int batDau = Math.Max(1, kq.TrangHienTai - 2);
+        int ketThuc = Math.Min(kq.TongSoTrang, kq.TrangHienTai + 2);
+
+        <nav aria-label="Phân trang">
+            <ul class="pagination justify-content-center flex-wrap">
+                <li class="page-item @(kq.TrangHienTai == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@linkTrang(kq.TrangHienTai - 1)">&laquo;</a>
+                </li>
+
+                @if (batDau > 1)
+                {
+                    <li class="page-item"><a class="page-link" href="@linkTrang(1)">1</a></li>
+                    @if (batDau > 2)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+
+                @for (int p = batDau; p <= ketThuc; p++)
+                {
+                    <li class="page-item @(p == kq.TrangHienTai ? "active" : "")">
+                        <a class="page-link" href="@linkTrang(p)">@p</a>
+                    </li>
+                }
+
+                @if (ketThuc < kq.TongSoTrang)
+                {
+                    @if (ketThuc < kq.TongSoTrang - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                    <li class="page-item">
+                        <a class="page-link" href="@linkTrang(kq.TongSoTrang)">@kq.TongSoTrang</a>
+                    </li>
+                }
+
+                <li class="page-item @(kq.TrangHienTai == kq.TongSoTrang ? "disabled" : "")">
+                    <a class="page-link" href="@linkTrang(kq.TrangHienTai + 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
