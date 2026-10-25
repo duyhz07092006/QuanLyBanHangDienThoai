@@ -281,9 +281,9 @@ Có thể kiểm tra thủ công trên database vừa tạo từ script (dữ li
 | # | Thao tác | Kết quả mong đợi |
 |---|---|---|
 | 1 | Đăng nhập `admin` / `123456` | Vào trang tổng quan: 15 điện thoại, 5 khách hàng, 1 đơn chờ xử lý, doanh thu 50.970.000 đ |
-| 2 | Đăng nhập `thuha` / `123456` | Chuyển tới `/CuaHang`; `/DonCuaToi` có 2 đơn (#1 và #4) |
-| 3 | Với `thuha`, mở đơn #4 ("Chờ xử lý") và bấm hủy | Đơn chuyển "Đã hủy", tồn kho Samsung Galaxy A55 5G và Realme C67 tăng thêm 1 |
-| 4 | Với `thuha`, thêm một điện thoại vào giỏ và đặt hàng | Tạo đơn "Chờ xử lý", tồn kho giảm đúng số lượng đã đặt |
+| 2 | Đăng nhập `ducanh` / `123456` | Chuyển tới `/CuaHang`; `/DonCuaToi` có 2 đơn (#1 và #4) |
+| 3 | Với `ducanh`, mở đơn #17 ("Chờ xử lý") và bấm hủy | Đơn chuyển "Đã hủy", tồn kho iPhone 15 Pro Max 256GB tăng thêm 1 |
+| 4 | Với `ducanh`, thêm một điện thoại vào giỏ và đặt hàng | Tạo đơn "Chờ xử lý", tồn kho giảm đúng số lượng đã đặt |
 | 5 | Đăng nhập `lan`, mở đơn mới và chuyển trạng thái | Chuyển được theo luồng `Chờ xử lý → Đang giao → Hoàn thành`; không chuyển ngược được |
 | 6 | Với tài khoản khách hàng, truy cập `/DanhMuc` | Hiện trang từ chối truy cập (`/Account/AccessDenied`) |
 | 7 | Chưa đăng nhập, truy cập `/DienThoai` | Chuyển tới trang đăng nhập |
